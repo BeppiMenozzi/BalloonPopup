@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BalloonPopup.iml" filepath="$PROJECT_DIR$/BalloonPopup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/balloonpopup_library/balloonpopup_library.iml" filepath="$PROJECT_DIR$/balloonpopup_library/balloonpopup_library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/balloonpopup_sample/balloonpopup_sample.iml" filepath="$PROJECT_DIR$/balloonpopup_sample/balloonpopup_sample.iml" />
+    </modules>
+  </component>
+</project>
