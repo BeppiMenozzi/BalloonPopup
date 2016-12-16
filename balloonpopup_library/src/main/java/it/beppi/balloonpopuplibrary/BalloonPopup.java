@@ -32,7 +32,7 @@ public class BalloonPopup {
     private Drawable drawable;
     private BalloonAnimation balloonAnimation;
     private int timeToLive;
-    private PopupWindow showingPopup;
+    private static PopupWindow showingPopup;
 
     private BDelay bDelay;
 
@@ -139,7 +139,7 @@ public class BalloonPopup {
         draw(pw);
     }
 
-    public void kill(PopupWindow popupWindow) {
+    public static void kill(PopupWindow popupWindow) {
         if (showingPopup ==  popupWindow) showingPopup = null;
         popupWindow.dismiss();
     }
@@ -209,7 +209,7 @@ public class BalloonPopup {
         if (showingPopup != null) draw(showingPopup);
     }
 
-    public PopupWindow getShowingPopup() {
+    public static PopupWindow getShowingPopup() {
         return showingPopup;
     }
 
