@@ -14,7 +14,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonAnimation.scale;
 import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonGravity.halftop_halfright;
 
 /**
@@ -33,6 +32,9 @@ public class BalloonPopup {
     private Drawable drawable;
     private BalloonAnimation balloonAnimation;
     private int timeToLive;
+    private PopupWindow showingPopup;
+
+    private BDelay bDelay;
 
     public enum BalloonShape {
         oval,
@@ -40,6 +42,8 @@ public class BalloonPopup {
     }
 
     public enum BalloonAnimation {
+        instantin_scaleout,
+        instantin_fadeout,
         scale,
         fade
     }
@@ -101,6 +105,7 @@ public class BalloonPopup {
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
 
         final PopupWindow pw = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        showingPopup = pw;
         if (Build.VERSION.SDK_INT >= 21) pw.setElevation(5.0f);
         pw.setFocusable(false);
         pw.setOutsideTouchable(true);
@@ -111,26 +116,35 @@ public class BalloonPopup {
         //TODO: manage bgcolor
 
         switch (balloonAnimation) {
+            case instantin_fadeout: pw.setAnimationStyle(R.style.instantin_fadeout); break;
+            case instantin_scaleout: pw.setAnimationStyle(R.style.instantin_scaleout); break;
             case scale: pw.setAnimationStyle(R.style.scale); break;
             case fade: pw.setAnimationStyle(R.style.fade); break;
         }
 
         if (timeToLive > 0) {
-            new BDelay((long) timeToLive, new Runnable() {
-                @Override public void run() {
-                    pw.dismiss();
-                }});
+            bDelay = new BDelay((long) timeToLive, new Runnable() {
+                @Override public void run() { kill(pw); }});
         }
 
         pw.setTouchInterceptor(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                pw.dismiss();
+                kill(pw);
                 return false;
             }
         });
 
 
+        draw(pw);
+    }
+
+    public void kill(PopupWindow popupWindow) {
+        if (showingPopup ==  popupWindow) showingPopup = null;
+        popupWindow.dismiss();
+    }
+
+    private void draw(PopupWindow pw) {
         // calc position and size, then show
 
         int[] loc = new int[2];
@@ -187,6 +201,29 @@ public class BalloonPopup {
         pw.showAtLocation(attachView, Gravity.NO_GRAVITY, posX, posY);
     }
 
+    /**
+     * Redraw the current popup. In case of change
+     */
+    public void redraw() {
+        if (bDelay != null) bDelay.setInterval(timeToLive);
+        if (showingPopup != null) draw(showingPopup);
+    }
+
+    public PopupWindow getShowingPopup() {
+        return showingPopup;
+    }
+
+    public void changeOffsetAndUpdateTime(int newOffsetX, int newOffsetY) {
+        offsetX = newOffsetX;
+        offsetY = newOffsetY;
+        redraw();
+    }
+
+    public void changeTextAndUpdateTime(String newText) {
+        text = newText;
+        redraw();
+    }
+
     public static class Builder {
         private Context ctx;
         private View attachView;
@@ -197,7 +234,7 @@ public class BalloonPopup {
         private String text = "";
         private int textSize = 12;
         private Drawable drawable;
-        private BalloonAnimation balloonAnimation = scale;
+        private BalloonAnimation balloonAnimation = BalloonAnimation.scale;
         private int timeToLive = 1500;
 
         public Builder(Context ctx, View attachView) {
