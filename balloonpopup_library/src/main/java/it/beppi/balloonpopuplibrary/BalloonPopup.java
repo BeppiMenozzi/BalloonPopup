@@ -31,8 +31,8 @@ public class BalloonPopup {
     private int textSize;
     private Drawable drawable;
     private BalloonAnimation balloonAnimation;
+    private PopupWindow popupWindow;
     private int timeToLive;
-    private static PopupWindow showingPopup;
 
     private BDelay bDelay;
 
@@ -104,44 +104,46 @@ public class BalloonPopup {
         tv.setTextColor(fgColor);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
 
-        final PopupWindow pw = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        showingPopup = pw;
-        if (Build.VERSION.SDK_INT >= 21) pw.setElevation(5.0f);
-        pw.setFocusable(false);
-        pw.setOutsideTouchable(true);
-        pw.setTouchable(true);
-        pw.setClippingEnabled(false);
-        if (drawable != null) pw.setBackgroundDrawable(drawable);
+        popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        showingPopup = pw;
+        if (Build.VERSION.SDK_INT >= 21) popupWindow.setElevation(5.0f);
+        popupWindow.setFocusable(false);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setTouchable(true);
+        popupWindow.setClippingEnabled(false);
+        if (drawable != null) popupWindow.setBackgroundDrawable(drawable);
 
         //TODO: manage bgcolor
 
         switch (balloonAnimation) {
-            case instantin_fadeout: pw.setAnimationStyle(R.style.instantin_fadeout); break;
-            case instantin_scaleout: pw.setAnimationStyle(R.style.instantin_scaleout); break;
-            case scale: pw.setAnimationStyle(R.style.scale); break;
-            case fade: pw.setAnimationStyle(R.style.fade); break;
+            case instantin_fadeout: popupWindow.setAnimationStyle(R.style.instantin_fadeout); break;
+            case instantin_scaleout: popupWindow.setAnimationStyle(R.style.instantin_scaleout); break;
+            case scale: popupWindow.setAnimationStyle(R.style.scale); break;
+            case fade: popupWindow.setAnimationStyle(R.style.fade); break;
         }
 
         if (timeToLive > 0) {
             bDelay = new BDelay((long) timeToLive, new Runnable() {
-                @Override public void run() { kill(pw); }});
+                @Override public void run() { kill(); }});
         }
 
-        pw.setTouchInterceptor(new View.OnTouchListener() {
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                kill(pw);
+                kill();
                 return false;
             }
         });
 
 
-        draw(pw);
+        draw(popupWindow);
     }
 
-    public static void kill(PopupWindow popupWindow) {
-        if (showingPopup ==  popupWindow) showingPopup = null;
+    private void kill() {
+//        if (showingPopup == popupWindow) showingPopup = null;
+        if (popupWindow == null) return;
         popupWindow.dismiss();
+        popupWindow = null;
     }
 
     private void draw(PopupWindow pw) {
@@ -206,11 +208,12 @@ public class BalloonPopup {
      */
     public void redraw() {
         if (bDelay != null) bDelay.setInterval(timeToLive);
-        if (showingPopup != null) draw(showingPopup);
+        draw(popupWindow);
+//        if (showingPopup != null) draw(showingPopup);
     }
 
-    public static PopupWindow getShowingPopup() {
-        return showingPopup;
+    public boolean isShowing() {
+        return (popupWindow != null);
     }
 
     public void changeOffsetAndUpdateTime(int newOffsetX, int newOffsetY) {
