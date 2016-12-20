@@ -33,6 +33,7 @@ public class BalloonPopup {
     private Drawable drawable;
     private BalloonAnimation balloonAnimation;
     private PopupWindow popupWindow;
+    private TextView textView;
     private int timeToLive;
 
     private BDelay bDelay;
@@ -102,10 +103,10 @@ public class BalloonPopup {
     private void show() {
         View customView = ((LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, null);
 
-        final TextView tv = (TextView) customView.findViewById(R.id.text_view);
-        tv.setText(text);
-        tv.setTextColor(fgColor);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
+        textView = (TextView) customView.findViewById(R.id.text_view);
+        textView.setText(text);
+        textView.setTextColor(fgColor);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
 
         if (popupWindow == null || !popupWindow.isShowing())
             popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -221,7 +222,8 @@ public class BalloonPopup {
 
     public void updateText(String newText, boolean restartLifeTime) {
         text = newText;
-        show();
+        textView.setText(text);
+        if (restartLifeTime) restartLifeTime();
     }
 
     public void updateGravity(BalloonGravity gravity, boolean restartLifeTime) {
@@ -236,12 +238,14 @@ public class BalloonPopup {
 
     public void updateTextSize(int textSize, boolean restartLifeTime) {
         this.textSize = textSize;
-        draw(restartLifeTime);
+        textView.setTextSize((float) textSize);
+        if (restartLifeTime) restartLifeTime();
     }
 
     public void updateFgColor(int fgColor, boolean restartLifeTime) {
         this.fgColor = fgColor;
-        draw(restartLifeTime);
+        textView.setTextColor(fgColor);
+        if (restartLifeTime) restartLifeTime();
     }
 
     public void restartLifeTimeToLive (int milliseconds, boolean restartLifeTime) {

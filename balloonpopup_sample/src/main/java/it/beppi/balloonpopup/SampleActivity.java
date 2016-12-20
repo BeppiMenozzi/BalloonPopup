@@ -56,8 +56,10 @@ public class SampleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 bg = BalloonGravity.values()[rnd.nextInt(25)];
                 button_g.setText(bg.toString());
-                if (bp != null && bp.isShowing())
+                if (bp != null && bp.isShowing()) {
                     bp.updateGravity(bg, true);
+                    bp.updateTextSize(new Random().nextInt(5) + 10, true);
+                }
             }
         });
 
