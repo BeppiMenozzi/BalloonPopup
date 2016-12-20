@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonGravity.halftop_halfright;
+import static it.beppi.balloonpopuplibrary.R.style.scale;
 
 /**
  * Created by Beppi on 14/12/2016.
@@ -44,8 +45,10 @@ public class BalloonPopup {
     public enum BalloonAnimation {
         instantin_scaleout,
         instantin_fadeout,
+        instantin_fade_and_scaleout,
         scale,
-        fade
+        fade,
+        fade_and_scale
     }
 
     public enum BalloonGravity {
@@ -118,8 +121,10 @@ public class BalloonPopup {
         switch (balloonAnimation) {
             case instantin_fadeout: popupWindow.setAnimationStyle(R.style.instantin_fadeout); break;
             case instantin_scaleout: popupWindow.setAnimationStyle(R.style.instantin_scaleout); break;
-            case scale: popupWindow.setAnimationStyle(R.style.scale); break;
+            case instantin_fade_and_scaleout: popupWindow.setAnimationStyle(R.style.instantin_fade_and_scaleout); break;
+            case scale: popupWindow.setAnimationStyle(scale); break;
             case fade: popupWindow.setAnimationStyle(R.style.fade); break;
+            case fade_and_scale: popupWindow.setAnimationStyle(R.style.fade_and_scale); break;
         }
 
         if (timeToLive > 0) {
@@ -136,7 +141,7 @@ public class BalloonPopup {
         });
 
 
-        draw(popupWindow);
+        draw();
     }
 
     private void kill() {
@@ -146,7 +151,7 @@ public class BalloonPopup {
         popupWindow = null;
     }
 
-    private void draw(PopupWindow pw) {
+    private void draw() {
         // calc position and size, then show
 
         int[] loc = new int[2];
@@ -156,51 +161,40 @@ public class BalloonPopup {
         int widthAttachView = attachView.getMeasuredWidth();
         int heightAttachView = attachView.getMeasuredHeight();
 
-        View hostedView = pw.getContentView();
+        View hostedView = popupWindow.getContentView();
         hostedView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int widthHostedView = hostedView.getMeasuredWidth();
         int heightHostedView = hostedView.getMeasuredHeight();
 
-        BalloonGravity gravity1 = gravity;
         int posX=loc[0] + offsetX;
         switch (gravity) {
             case alltop_allleft: case halftop_allleft: case center_allleft: case halfbottom_allleft: case allbottom_allleft:
-                posX -= widthHostedView;
-                break;
+                posX -= widthHostedView; break;
             case alltop_halfleft: case halftop_halfleft: case center_halfleft: case halfbottom_halfleft: case allbottom_halfleft:
-                posX -= widthHostedView / 2;
-                break;
+                posX -= widthHostedView / 2; break;
             case alltop_center: case halftop_center: case center: case halfbottom_center: case allbottom_center:
-                posX += widthAttachView / 2 - widthHostedView / 2;
-                break;
+                posX += widthAttachView / 2 - widthHostedView / 2; break;
             case alltop_halfright: case halftop_halfright: case center_halfright: case halfbottom_halfright: case allbottom_halfright:
-                posX += widthAttachView - widthHostedView / 2;
-                break;
+                posX += widthAttachView - widthHostedView / 2; break;
             case alltop_allright: case halftop_allright: case center_allright: case halfbottom_allright: case allbottom_allright:
-                posX += widthAttachView;
-                break;
+                posX += widthAttachView; break;
         }
 
         int posY=loc[1] + offsetY;
-        switch (gravity1) {
+        switch (gravity) {
             case alltop_allleft: case alltop_halfleft: case alltop_center: case alltop_halfright: case alltop_allright:
-                posY -= heightHostedView;
-                break;
+                posY -= heightHostedView; break;
             case halftop_allleft: case halftop_halfleft: case halftop_center: case halftop_halfright: case halftop_allright:
-                posY -= heightHostedView / 2;
-                break;
+                posY -= heightHostedView / 2; break;
             case center_allleft: case center_halfleft: case center: case center_halfright: case center_allright:
-                posY += heightAttachView / 2 - heightHostedView / 2;
-                break;
+                posY += heightAttachView / 2 - heightHostedView / 2; break;
             case halfbottom_allleft: case halfbottom_halfleft: case halfbottom_center: case halfbottom_halfright: case halfbottom_allright:
-                posY += heightAttachView - heightHostedView / 2;
-                break;
+                posY += heightAttachView - heightHostedView / 2; break;
             case allbottom_allleft: case allbottom_halfleft: case allbottom_center: case allbottom_halfright: case allbottom_allright:
-                posY += heightAttachView;
-                break;
+                posY += heightAttachView; break;
         }
 
-        pw.showAtLocation(attachView, Gravity.NO_GRAVITY, posX, posY);
+        popupWindow.showAtLocation(attachView, Gravity.NO_GRAVITY, posX, posY);
     }
 
     /**
@@ -208,7 +202,7 @@ public class BalloonPopup {
      */
     public void redraw() {
         if (bDelay != null) bDelay.setInterval(timeToLive);
-        draw(popupWindow);
+        draw();
 //        if (showingPopup != null) draw(showingPopup);
     }
 
@@ -219,7 +213,13 @@ public class BalloonPopup {
     public void changeOffsetAndUpdateTime(int newOffsetX, int newOffsetY) {
         offsetX = newOffsetX;
         offsetY = newOffsetY;
-        redraw();
+//        redraw();
+        if (popupWindow.isShowing()) {
+            if (bDelay != null) bDelay.setInterval(timeToLive);
+            popupWindow.update();
+        }
+        else
+            redraw();
     }
 
     public void changeTextAndUpdateTime(String newText) {
@@ -227,6 +227,9 @@ public class BalloonPopup {
         redraw();
     }
 
+    
+    
+    
     public static class Builder {
         private Context ctx;
         private View attachView;
