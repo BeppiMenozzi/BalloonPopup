@@ -107,11 +107,12 @@ public class BalloonPopup {
         tv.setTextColor(fgColor);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
 
-        popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        showingPopup = pw;
+        if (popupWindow == null || !popupWindow.isShowing())
+            popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         if (Build.VERSION.SDK_INT >= 21) popupWindow.setElevation(5.0f);
         popupWindow.setFocusable(false);
-        popupWindow.setOutsideTouchable(true);
+        popupWindow.setOutsideTouchable(false);
         popupWindow.setTouchable(true);
         popupWindow.setClippingEnabled(false);
         if (drawable != null) popupWindow.setBackgroundDrawable(drawable);
@@ -128,8 +129,13 @@ public class BalloonPopup {
         }
 
         if (timeToLive > 0) {
-            bDelay = new BDelay((long) timeToLive, new Runnable() {
+            if (bDelay == null)
+                bDelay = new BDelay((long) timeToLive, new Runnable() {
                 @Override public void run() { kill(); }});
+            else {
+                bDelay.setInterval(timeToLive);
+                bDelay.setOnTickHandler(new Runnable() { @Override public void run() { kill(); }});
+            }
         }
 
         popupWindow.setTouchInterceptor(new View.OnTouchListener() {
@@ -141,17 +147,18 @@ public class BalloonPopup {
         });
 
 
-        draw();
+        draw(true);
     }
 
     private void kill() {
 //        if (showingPopup == popupWindow) showingPopup = null;
         if (popupWindow == null) return;
         popupWindow.dismiss();
-        popupWindow = null;
+        bDelay.stop();
+//        popupWindow = null;
     }
 
-    private void draw() {
+    private void draw(boolean restartLifeTime) {
         // calc position and size, then show
 
         int[] loc = new int[2];
@@ -194,42 +201,54 @@ public class BalloonPopup {
                 posY += heightAttachView; break;
         }
 
-        popupWindow.showAtLocation(attachView, Gravity.NO_GRAVITY, posX, posY);
-    }
-
-    /**
-     * Redraw the current popup. In case of change
-     */
-    public void redraw() {
-        if (bDelay != null) bDelay.setInterval(timeToLive);
-        draw();
-//        if (showingPopup != null) draw(showingPopup);
+        if (restartLifeTime && popupWindow.isShowing()) {
+            popupWindow.update(posX, posY, popupWindow.getWidth(), popupWindow.getHeight());
+            if (bDelay != null) bDelay.updateInterval(timeToLive);
+        } else
+            popupWindow.showAtLocation(attachView, Gravity.NO_GRAVITY, posX, posY);
     }
 
     public boolean isShowing() {
-        return (popupWindow != null);
+        if (popupWindow == null) return false;
+        return (popupWindow.isShowing());
     }
 
-    public void changeOffsetAndUpdateTime(int newOffsetX, int newOffsetY) {
+    public void updateOffset(int newOffsetX, int newOffsetY, boolean restartLifeTime) {
         offsetX = newOffsetX;
         offsetY = newOffsetY;
-//        redraw();
-        if (popupWindow.isShowing()) {
-            if (bDelay != null) bDelay.setInterval(timeToLive);
-            popupWindow.update();
-        }
-        else
-            redraw();
+        draw(restartLifeTime);
     }
 
-    public void changeTextAndUpdateTime(String newText) {
+    public void updateText(String newText, boolean restartLifeTime) {
         text = newText;
-        redraw();
+        draw(restartLifeTime);
     }
 
-    
-    
-    
+    public void updateGravity(BalloonGravity gravity, boolean restartLifeTime) {
+        this.gravity = gravity;
+        draw(restartLifeTime);
+    }
+
+    public void restartLifeTime() {
+        bDelay.updateInterval(timeToLive);
+        draw(true);
+    }
+
+    public void updateTextSize(int textSize, boolean restartLifeTime) {
+        this.textSize = textSize;
+        draw(restartLifeTime);
+    }
+
+    public void updateFgColor(int fgColor, boolean restartLifeTime) {
+        this.fgColor = fgColor;
+        draw(restartLifeTime);
+    }
+
+    public void restartLifeTimeToLive (int milliseconds, boolean restartLifeTime) {
+        this.timeToLive = milliseconds;
+        draw(restartLifeTime);
+    }
+
     public static class Builder {
         private Context ctx;
         private View attachView;

@@ -17,6 +17,11 @@ public class BDelay {
     private long interval;
     public long getInterval() { return interval; }
     public void setInterval(long delay) { interval = delay; }
+    public void updateInterval(long delay) {
+        interval = delay;
+        handler.removeCallbacks(delegate);
+        handler.postDelayed(delegate, interval);
+    }
 
     public BDelay(long interv, Runnable onTickHandler)
     {
@@ -44,4 +49,10 @@ public class BDelay {
             }
         };
     }
+
+    public void stop()
+    {
+        handler.removeCallbacks(delegate);
+    }
+
 }

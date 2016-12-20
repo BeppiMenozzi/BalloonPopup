@@ -3,6 +3,7 @@ package it.beppi.balloonpopup;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
@@ -19,17 +20,23 @@ import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonShape.rounded_squ
 public class SampleActivity extends AppCompatActivity {
     PopupWindow pw;
     BalloonGravity bg = center;
+    BalloonPopup bp;
     Random rnd = new Random();
+    BTimer bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
+
         ((Button)findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
+                Log.d("beppi", "balloonpopup null: " + Boolean.toString(bp == null));
+                if (bp != null) Log.d("beppi", "balloonpopup !null showing: " + Boolean.toString(bp.isShowing()));
+                if (bp == null || !bp.isShowing())
+                    bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
                         .text("text")
                         .timeToLive(2000)
                         .animation(fade_and_scale)
@@ -38,6 +45,8 @@ public class SampleActivity extends AppCompatActivity {
                         .fgColor(Color.RED)
                         .gravity(bg)
                         .show();
+                else
+                    bp.restartLifeTime();
             }
         });
 
@@ -47,6 +56,8 @@ public class SampleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 bg = BalloonGravity.values()[rnd.nextInt(25)];
                 button_g.setText(bg.toString());
+                if (bp != null && bp.isShowing())
+                    bp.updateGravity(bg, true);
             }
         });
 
