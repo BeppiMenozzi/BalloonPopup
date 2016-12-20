@@ -221,7 +221,7 @@ public class BalloonPopup {
 
     public void updateText(String newText, boolean restartLifeTime) {
         text = newText;
-        draw(restartLifeTime);
+        show();
     }
 
     public void updateGravity(BalloonGravity gravity, boolean restartLifeTime) {
