@@ -8,5 +8,5 @@
     android:fromAlpha="1.0"
     android:toAlpha="0.0"
     android:duration="300"
-    android:interpolator="@android:anim/accelerate_interpolator"
+    android:interpolator="@android:anim/anticipate_interpolator"
     />

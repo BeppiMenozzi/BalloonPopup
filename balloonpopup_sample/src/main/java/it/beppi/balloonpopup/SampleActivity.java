@@ -13,7 +13,7 @@ import java.util.Random;
 import it.beppi.balloonpopuplibrary.BalloonPopup;
 import it.beppi.balloonpopuplibrary.BalloonPopup.BalloonGravity;
 
-import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonAnimation.fade_and_scale;
+import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonAnimation.fade_and_pop;
 import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonGravity.center;
 import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonShape.rounded_square;
 
@@ -39,7 +39,7 @@ public class SampleActivity extends AppCompatActivity {
                     bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
                         .text("text")
                         .timeToLive(2000)
-                        .animation(fade_and_scale)
+                        .animation(fade_and_pop)
                         .shape(rounded_square)
                         .bgColor(Color.CYAN)
                         .fgColor(Color.RED)

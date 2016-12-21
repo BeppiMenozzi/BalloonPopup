@@ -1,7 +1,7 @@
 <resources>
-    <style name="scale" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/scale_in</item>
-        <item name="android:windowExitAnimation">@anim/scale_out</item>
+    <style name="pop" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_in</item>
+        <item name="android:windowExitAnimation">@anim/pop_out</item>
     </style>
 
     <style name="fade" parent="android:Animation">
@@ -9,20 +9,41 @@
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <style name="fade_and_pop" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/fade_and_pop_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_and_pop_out</item>
+    </style>
+
+    <style name="scale" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/scale_in</item>
+        <item name="android:windowExitAnimation">@anim/scale_out</item>
+    </style>
+
     <style name="fade_and_scale" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/fade_and_scale_in</item>
         <item name="android:windowExitAnimation">@anim/fade_and_scale_out</item>
     </style>
 
-    <style name="instantin_scaleout" parent="android:Animation">
-        <item name="android:windowExitAnimation">@anim/scale_out</item>
+    <style name="instantin_popout" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/pop_out</item>
     </style>
 
     <style name="instantin_fadeout" parent="android:Animation">
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <style name="instantin_scaleout" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/scale_out</item>
+    </style>
+
+    <style name="instantin_fade_and_popout" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/fade_and_pop_out</item>
+    </style>
+
     <style name="instantin_fade_and_scaleout" parent="android:Animation">
         <item name="android:windowExitAnimation">@anim/fade_and_scale_out</item>
     </style>
+
 </resources>
+
+<!-- todo: asymmetric pop -->

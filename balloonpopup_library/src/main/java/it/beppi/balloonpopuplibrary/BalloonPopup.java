@@ -15,7 +15,13 @@ import android.widget.TextView;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static it.beppi.balloonpopuplibrary.BalloonPopup.BalloonGravity.halftop_halfright;
-import static it.beppi.balloonpopuplibrary.R.style.scale;
+import static it.beppi.balloonpopuplibrary.R.style.fade_and_pop;
+import static it.beppi.balloonpopuplibrary.R.style.fade_and_scale;
+import static it.beppi.balloonpopuplibrary.R.style.instantin_fade_and_popout;
+import static it.beppi.balloonpopuplibrary.R.style.instantin_fade_and_scaleout;
+import static it.beppi.balloonpopuplibrary.R.style.instantin_fadeout;
+import static it.beppi.balloonpopuplibrary.R.style.instantin_popout;
+import static it.beppi.balloonpopuplibrary.R.style.pop;
 
 /**
  * Created by Beppi on 14/12/2016.
@@ -44,12 +50,19 @@ public class BalloonPopup {
     }
 
     public enum BalloonAnimation {
-        instantin_scaleout,
-        instantin_fadeout,
-        instantin_fade_and_scaleout,
+        pop,
         scale,
         fade,
-        fade_and_scale
+
+        fade_and_pop,
+        fade_and_scale,
+
+        instantin_popout,
+        instantin_scaleout,
+        instantin_fadeout,
+
+        instantin_fade_and_popout,
+        instantin_fade_and_scaleout
     }
 
     public enum BalloonGravity {
@@ -121,12 +134,16 @@ public class BalloonPopup {
         //TODO: manage bgcolor
 
         switch (balloonAnimation) {
-            case instantin_fadeout: popupWindow.setAnimationStyle(R.style.instantin_fadeout); break;
+            case instantin_fadeout: popupWindow.setAnimationStyle(instantin_fadeout); break;
+            case instantin_popout: popupWindow.setAnimationStyle(instantin_popout); break;
             case instantin_scaleout: popupWindow.setAnimationStyle(R.style.instantin_scaleout); break;
-            case instantin_fade_and_scaleout: popupWindow.setAnimationStyle(R.style.instantin_fade_and_scaleout); break;
-            case scale: popupWindow.setAnimationStyle(scale); break;
+            case instantin_fade_and_popout: popupWindow.setAnimationStyle(instantin_fade_and_popout); break;
+            case instantin_fade_and_scaleout: popupWindow.setAnimationStyle(instantin_fade_and_scaleout); break;
+            case pop: popupWindow.setAnimationStyle(pop); break;
+            case scale: popupWindow.setAnimationStyle(R.style.scale); break;
             case fade: popupWindow.setAnimationStyle(R.style.fade); break;
-            case fade_and_scale: popupWindow.setAnimationStyle(R.style.fade_and_scale); break;
+            case fade_and_pop: popupWindow.setAnimationStyle(fade_and_pop); break;
+            case fade_and_scale: popupWindow.setAnimationStyle(fade_and_scale); break;
         }
 
         if (timeToLive > 0) {
@@ -263,7 +280,7 @@ public class BalloonPopup {
         private String text = "";
         private int textSize = 12;
         private Drawable drawable;
-        private BalloonAnimation balloonAnimation = BalloonAnimation.scale;
+        private BalloonAnimation balloonAnimation = BalloonAnimation.pop;
         private int timeToLive = 1500;
 
         public Builder(Context ctx, View attachView) {
