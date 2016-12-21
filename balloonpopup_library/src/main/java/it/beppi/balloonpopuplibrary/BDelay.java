@@ -19,6 +19,7 @@ public class BDelay {
     public void setInterval(long delay) { interval = delay; }
     public void updateInterval(long delay) {
         interval = delay;
+        if (handler == null) handler = new Handler();
         handler.removeCallbacks(delegate);
         handler.postDelayed(delegate, interval);
     }
