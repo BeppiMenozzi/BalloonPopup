@@ -169,11 +169,8 @@ public class BalloonPopup {
     }
 
     private void kill() {
-//        if (showingPopup == popupWindow) showingPopup = null;
-        if (popupWindow == null) return;
-        popupWindow.dismiss();
-        bDelay.stop();
-//        popupWindow = null;
+        if (popupWindow != null) popupWindow.dismiss();
+        if (bDelay != null) bDelay.stop();
     }
 
     private void draw(boolean restartLifeTime) {
@@ -249,11 +246,13 @@ public class BalloonPopup {
     }
 
     public void restartLifeTime() {
-        if (timeToLive == 0)
-            bDelay.stop();
-        else
-            bDelay.updateInterval(timeToLive);
-        draw(true);
+        if (bDelay != null) {
+            if (timeToLive == 0)
+                bDelay.stop();
+            else
+                bDelay.updateInterval(timeToLive);
+        }
+        show();
     }
 
     public void updateTextSize(int textSize, boolean restartLifeTime) {

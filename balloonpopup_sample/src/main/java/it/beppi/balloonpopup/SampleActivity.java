@@ -38,7 +38,7 @@ public class SampleActivity extends AppCompatActivity {
                 if (bp == null || !bp.isShowing())
                     bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
                         .text("text")
-                        .timeToLive(2000)
+                        .timeToLive(0)
                         .animation(fade_and_pop)
                         .shape(rounded_square)
                         .bgColor(Color.CYAN)
