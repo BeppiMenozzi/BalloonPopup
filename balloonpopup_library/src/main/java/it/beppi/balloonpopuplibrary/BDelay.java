@@ -19,9 +19,10 @@ public class BDelay {
     public void setInterval(long delay) { interval = delay; }
     public void updateInterval(long delay) {
         interval = delay;
-        if (handler == null) handler = new Handler();
-        handler.removeCallbacks(delegate);
-        handler.postDelayed(delegate, interval);
+        if (handler != null && delegate != null) {
+            handler.removeCallbacks(delegate);
+            handler.postDelayed(delegate, interval);
+        }
     }
 
     public BDelay(long interv, Runnable onTickHandler)
@@ -42,7 +43,7 @@ public class BDelay {
         delegate = new Runnable() {
             public void run()
             {
-                if (tickHandler == null) return;
+                if (tickHandler == null || handler == null) return;
                 handler.postDelayed(delegate, interval);
                 tickHandler.run();
                 handler.removeCallbacks(delegate);
@@ -53,7 +54,8 @@ public class BDelay {
 
     public void stop()
     {
-        handler.removeCallbacks(delegate);
+        if (handler != null && delegate != null)
+            handler.removeCallbacks(delegate);
     }
 
 }

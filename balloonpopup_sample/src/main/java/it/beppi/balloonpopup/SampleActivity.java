@@ -3,7 +3,6 @@ package it.beppi.balloonpopup;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
@@ -33,12 +32,10 @@ public class SampleActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("beppi", "balloonpopup null: " + Boolean.toString(bp == null));
-                if (bp != null) Log.d("beppi", "balloonpopup !null showing: " + Boolean.toString(bp.isShowing()));
                 if (bp == null || !bp.isShowing())
                     bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
                         .text("text")
-                        .timeToLive(0)
+                        .timeToLive(2000)
                         .animation(fade_and_pop)
                         .shape(rounded_square)
                         .bgColor(Color.CYAN)
