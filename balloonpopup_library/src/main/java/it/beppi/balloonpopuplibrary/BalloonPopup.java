@@ -249,7 +249,10 @@ public class BalloonPopup {
     }
 
     public void restartLifeTime() {
-        bDelay.updateInterval(timeToLive);
+        if (timeToLive == 0)
+            bDelay.stop();
+        else
+            bDelay.updateInterval(timeToLive);
         draw(true);
     }
 
