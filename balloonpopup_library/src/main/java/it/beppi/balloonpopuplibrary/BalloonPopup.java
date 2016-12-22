@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -194,7 +193,7 @@ public class BalloonPopup {
         int[] loc = new int[2];
         attachView.getLocationOnScreen(loc);
 
-        attachView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+//        attachView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         attachView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int widthAttachView = attachView.getMeasuredWidth();
         int heightAttachView = attachView.getMeasuredHeight();
@@ -203,7 +202,7 @@ public class BalloonPopup {
             new BDelay(50, new Runnable() { @Override public void run() { draw(restartLifeTime); }});
             return;
         }
-        hostedView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+//        hostedView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         hostedView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int widthHostedView = hostedView.getMeasuredWidth();
         int heightHostedView = hostedView.getMeasuredHeight();
