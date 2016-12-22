@@ -5,6 +5,7 @@ package it.beppi.balloonpopuplibrary;
  */
 
 import android.os.Handler;
+import android.util.Log;
 
 /**
  * Lancia un Runnable dopo un tempo tot in ms.
@@ -19,14 +20,15 @@ public class BDelay {
     public void setInterval(long delay) { interval = delay; }
     public void updateInterval(long delay) {
         interval = delay;
-        if (handler != null && delegate != null) {
-            handler.removeCallbacks(delegate);
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
             handler.postDelayed(delegate, interval);
         }
     }
 
     public BDelay(long interv, Runnable onTickHandler)
     {
+        Log.d("beppi", "bdelay constructor");
         interval = interv;
         setOnTickHandler(onTickHandler);
         handler = new Handler();
@@ -43,19 +45,17 @@ public class BDelay {
         delegate = new Runnable() {
             public void run()
             {
-                if (tickHandler == null || handler == null) return;
-                handler.postDelayed(delegate, interval);
+                if (tickHandler == null) return;
+                handler.removeCallbacksAndMessages(null);
                 tickHandler.run();
-                handler.removeCallbacks(delegate);
-                handler = null;
             }
         };
     }
 
-    public void stop()
+    public void clear()
     {
-        if (handler != null && delegate != null)
-            handler.removeCallbacks(delegate);
+        if (handler != null)
+            handler.removeCallbacksAndMessages(null);
     }
 
 }
