@@ -134,36 +134,16 @@ public class BalloonPopup {
             //TODO: manage bgcolor
 
             switch (balloonAnimation) {
-                case instantin_fadeout:
-                    popupWindow.setAnimationStyle(instantin_fadeout);
-                    break;
-                case instantin_popout:
-                    popupWindow.setAnimationStyle(instantin_popout);
-                    break;
-                case instantin_scaleout:
-                    popupWindow.setAnimationStyle(R.style.instantin_scaleout);
-                    break;
-                case instantin_fade_and_popout:
-                    popupWindow.setAnimationStyle(instantin_fade_and_popout);
-                    break;
-                case instantin_fade_and_scaleout:
-                    popupWindow.setAnimationStyle(instantin_fade_and_scaleout);
-                    break;
-                case pop:
-                    popupWindow.setAnimationStyle(pop);
-                    break;
-                case scale:
-                    popupWindow.setAnimationStyle(R.style.scale);
-                    break;
-                case fade:
-                    popupWindow.setAnimationStyle(R.style.fade);
-                    break;
-                case fade_and_pop:
-                    popupWindow.setAnimationStyle(fade_and_pop);
-                    break;
-                case fade_and_scale:
-                    popupWindow.setAnimationStyle(fade_and_scale);
-                    break;
+                case instantin_fadeout: popupWindow.setAnimationStyle(instantin_fadeout); break;
+                case instantin_popout: popupWindow.setAnimationStyle(instantin_popout); break;
+                case instantin_scaleout: popupWindow.setAnimationStyle(R.style.instantin_scaleout); break;
+                case instantin_fade_and_popout: popupWindow.setAnimationStyle(instantin_fade_and_popout); break;
+                case instantin_fade_and_scaleout: popupWindow.setAnimationStyle(instantin_fade_and_scaleout); break;
+                case pop: popupWindow.setAnimationStyle(pop); break;
+                case scale: popupWindow.setAnimationStyle(R.style.scale); break;
+                case fade: popupWindow.setAnimationStyle(R.style.fade); break;
+                case fade_and_pop: popupWindow.setAnimationStyle(fade_and_pop); break;
+                case fade_and_scale: popupWindow.setAnimationStyle(fade_and_scale); break;
             }
         }
 
@@ -238,8 +218,12 @@ public class BalloonPopup {
 
         if (restartLifeTime && popupWindow.isShowing()) {
             popupWindow.update(posX, posY, popupWindow.getWidth(), popupWindow.getHeight());
-            if (bDelay != null)
-                bDelay.updateInterval(timeToLive);
+            if (bDelay != null) {
+                if (timeToLive == 0)
+                    bDelay.clear();
+                else
+                    bDelay.updateInterval(timeToLive);
+            }
             else
                 bDelay = new BDelay((long) timeToLive, new Runnable() { @Override public void run() { kill(); }});
         } else
@@ -257,42 +241,49 @@ public class BalloonPopup {
         draw(restartLifeTime);
     }
 
-    public void updateText(String newText, boolean restartLifeTime) {
-        text = newText;
-        textView.setText(text);
-        if (restartLifeTime) restartLifeTime();
-    }
-
     public void updateGravity(BalloonGravity gravity, boolean restartLifeTime) {
         this.gravity = gravity;
         draw(restartLifeTime);
     }
 
-    public void restartLifeTime() {
-        if (bDelay != null) {
-            if (timeToLive == 0)
-                bDelay.clear();
-            else
-                bDelay.updateInterval(timeToLive);
-        }
-        show();
+    public void updateText(String newText, boolean restartLifeTime) {
+        text = newText;
+        textView.setText(text);
+        draw (restartLifeTime);
     }
 
     public void updateTextSize(int textSize, boolean restartLifeTime) {
         this.textSize = textSize;
         textView.setTextSize((float) textSize);
-        if (restartLifeTime) restartLifeTime();
+        draw (restartLifeTime);
     }
 
     public void updateFgColor(int fgColor, boolean restartLifeTime) {
         this.fgColor = fgColor;
         textView.setTextColor(fgColor);
-        if (restartLifeTime) restartLifeTime();
+        draw (restartLifeTime);
     }
 
-    public void restartLifeTimeToLive (int milliseconds, boolean restartLifeTime) {
+    public void updateLifeTimeToLive (int milliseconds, boolean restartLifeTime) {
         this.timeToLive = milliseconds;
-        draw(restartLifeTime);
+        draw (restartLifeTime);
+    }
+
+    public void restartLifeTime() {
+        if (popupWindow.isShowing()) {
+            if (bDelay != null) {
+                if (timeToLive == 0)
+                    bDelay.clear();
+                else
+                    bDelay.updateInterval(timeToLive);
+            } else
+                bDelay = new BDelay((long) timeToLive, new Runnable() {
+                    @Override
+                    public void run() {
+                        kill();
+                    }
+                });
+        }
     }
 
     public static class Builder {
