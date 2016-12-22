@@ -24,6 +24,21 @@
         <item name="android:windowExitAnimation">@anim/fade_and_scale_out</item>
     </style>
 
+    <style name="fade75" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/fade75_in</item>
+        <item name="android:windowExitAnimation">@anim/fade75_out</item>
+    </style>
+
+    <style name="fade75_and_pop" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/fade75_and_pop_in</item>
+        <item name="android:windowExitAnimation">@anim/fade75_and_pop_out</item>
+    </style>
+
+    <style name="fade75_and_scale" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/fade75_and_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/fade75_and_scale_out</item>
+    </style>
+
     <style name="instantin_popout" parent="android:Animation">
         <item name="android:windowExitAnimation">@anim/pop_out</item>
     </style>
@@ -44,6 +59,17 @@
         <item name="android:windowExitAnimation">@anim/fade_and_scale_out</item>
     </style>
 
+    <style name="instantin_fade75out" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/fade75_out</item>
+    </style>
+
+    <style name="instantin_fade75_and_popout" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/fade75_and_pop_out</item>
+    </style>
+
+    <style name="instantin_fade75_and_scaleout" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/fade75_and_scale_out</item>
+    </style>
 </resources>
 
 <!-- todo: asymmetric pop -->

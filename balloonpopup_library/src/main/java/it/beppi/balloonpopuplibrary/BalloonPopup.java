@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -21,6 +22,7 @@ import static it.beppi.balloonpopuplibrary.R.style.instantin_fade_and_popout;
 import static it.beppi.balloonpopuplibrary.R.style.instantin_fade_and_scaleout;
 import static it.beppi.balloonpopuplibrary.R.style.instantin_fadeout;
 import static it.beppi.balloonpopuplibrary.R.style.instantin_popout;
+import static it.beppi.balloonpopuplibrary.R.style.instantin_scaleout;
 import static it.beppi.balloonpopuplibrary.R.style.pop;
 
 /**
@@ -43,6 +45,7 @@ public class BalloonPopup {
     private int timeToLive;
 
     private BDelay bDelay;
+    private View hostedView;
 
     public enum BalloonShape {
         oval,
@@ -53,16 +56,22 @@ public class BalloonPopup {
         pop,
         scale,
         fade,
+        fade75,
 
         fade_and_pop,
         fade_and_scale,
+        fade75_and_pop,
+        fade75_and_scale,
 
         instantin_popout,
         instantin_scaleout,
         instantin_fadeout,
+        instantin_fade75out,
 
         instantin_fade_and_popout,
-        instantin_fade_and_scaleout
+        instantin_fade_and_scaleout,
+        instantin_fade75_and_popout,
+        instantin_fade75_and_scaleout
     }
 
     public enum BalloonGravity {
@@ -114,15 +123,15 @@ public class BalloonPopup {
     }
 
     private void show() {
-        View customView = ((LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, null);
+        hostedView = ((LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, null);
 
-        textView = (TextView) customView.findViewById(R.id.text_view);
+        textView = (TextView) hostedView.findViewById(R.id.text_view);
         textView.setText(text);
         textView.setTextColor(fgColor);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
 
         if (popupWindow == null) { // || !popupWindow.isShowing())
-            popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            popupWindow = new PopupWindow(hostedView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             if (Build.VERSION.SDK_INT >= 21) popupWindow.setElevation(5.0f);
             popupWindow.setFocusable(false);
@@ -136,7 +145,7 @@ public class BalloonPopup {
             switch (balloonAnimation) {
                 case instantin_fadeout: popupWindow.setAnimationStyle(instantin_fadeout); break;
                 case instantin_popout: popupWindow.setAnimationStyle(instantin_popout); break;
-                case instantin_scaleout: popupWindow.setAnimationStyle(R.style.instantin_scaleout); break;
+                case instantin_scaleout: popupWindow.setAnimationStyle(instantin_scaleout); break;
                 case instantin_fade_and_popout: popupWindow.setAnimationStyle(instantin_fade_and_popout); break;
                 case instantin_fade_and_scaleout: popupWindow.setAnimationStyle(instantin_fade_and_scaleout); break;
                 case pop: popupWindow.setAnimationStyle(pop); break;
@@ -144,6 +153,12 @@ public class BalloonPopup {
                 case fade: popupWindow.setAnimationStyle(R.style.fade); break;
                 case fade_and_pop: popupWindow.setAnimationStyle(fade_and_pop); break;
                 case fade_and_scale: popupWindow.setAnimationStyle(fade_and_scale); break;
+                case fade75: popupWindow.setAnimationStyle(R.style.fade75); break;
+                case fade75_and_pop: popupWindow.setAnimationStyle(R.style.fade75_and_pop); break;
+                case fade75_and_scale: popupWindow.setAnimationStyle(R.style.fade75_and_scale); break;
+                case instantin_fade75out: popupWindow.setAnimationStyle(R.style.instantin_fade75out); break;
+                case instantin_fade75_and_popout: popupWindow.setAnimationStyle(R.style.instantin_fade75_and_popout); break;
+                case instantin_fade75_and_scaleout: popupWindow.setAnimationStyle(R.style.instantin_fade75_and_scaleout); break;
             }
         }
 
@@ -173,17 +188,22 @@ public class BalloonPopup {
         if (bDelay != null) bDelay.clear();
     }
 
-    private void draw(boolean restartLifeTime) {
+    private void draw(final boolean restartLifeTime) {
         // calc position and size, then show
 
         int[] loc = new int[2];
         attachView.getLocationOnScreen(loc);
 
+        attachView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         attachView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int widthAttachView = attachView.getMeasuredWidth();
         int heightAttachView = attachView.getMeasuredHeight();
 
-        View hostedView = popupWindow.getContentView();
+        if (hostedView == null) {
+            new BDelay(50, new Runnable() { @Override public void run() { draw(restartLifeTime); }});
+            return;
+        }
+        hostedView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         hostedView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int widthHostedView = hostedView.getMeasuredWidth();
         int heightHostedView = hostedView.getMeasuredHeight();
