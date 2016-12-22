@@ -137,7 +137,11 @@ public class BalloonPopup {
             popupWindow.setOutsideTouchable(false);
             popupWindow.setTouchable(true);
             popupWindow.setClippingEnabled(false);
-            if (drawable != null) popupWindow.setBackgroundDrawable(drawable);
+            if (drawable != null) {
+                drawable.setAlpha(getDrawableAlpha());
+                popupWindow.setBackgroundDrawable(drawable);
+            }
+
 
             //TODO: manage bgcolor
 
@@ -180,6 +184,18 @@ public class BalloonPopup {
 
 
         draw(true);
+    }
+
+    int getDrawableAlpha() {
+        if (    balloonAnimation == BalloonAnimation.fade75 ||
+                balloonAnimation == BalloonAnimation.fade75_and_pop ||
+                balloonAnimation == BalloonAnimation.fade75_and_scale ||
+                balloonAnimation == BalloonAnimation.instantin_fade75_and_popout ||
+                balloonAnimation == BalloonAnimation.instantin_fade75_and_scaleout ||
+                balloonAnimation == BalloonAnimation.instantin_fade75out
+                )
+            return 192;
+        else return 255;
     }
 
     private void kill() {
