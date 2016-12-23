@@ -25,7 +25,7 @@ In your Application's or Module's build.gradle file:
 
 ### Minimal usage
 
-    bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
+    bp = BalloonPopup.Builder(getApplicationContext(), myView)
                         .text("myText")
                         .show();
                         
