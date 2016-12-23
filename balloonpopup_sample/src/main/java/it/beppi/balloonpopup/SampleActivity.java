@@ -41,9 +41,16 @@ public class SampleActivity extends AppCompatActivity {
                         .bgColor(Color.CYAN)
                         .fgColor(Color.RED)
                         .gravity(bg)
+                        .textSize(6)
+                        .offsetX(10)
+                        .offsetY(15)
+                        .positionOffset(10, 15)
+                        .drawable(R.drawable.bg_circle)
+                        .layoutRes(R.layout.customview)
                         .show();
                 else
                     bp.restartLifeTime();
+
             }
         });
 

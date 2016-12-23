@@ -275,10 +275,16 @@ public class BalloonPopup {
         offsetY = newOffsetY;
         draw(restartLifeTime);
     }
+    public void updateOffset(int newOffsetX, int newOffsetY) {
+        updateOffset(newOffsetX, newOffsetY, true);
+    }
 
     public void updateGravity(BalloonGravity gravity, boolean restartLifeTime) {
         this.gravity = gravity;
         draw(restartLifeTime);
+    }
+    public void updateGravity(BalloonGravity gravity) {
+        updateGravity(gravity, true);
     }
 
     public void updateText(String newText, boolean restartLifeTime) {
@@ -286,11 +292,23 @@ public class BalloonPopup {
         textView.setText(text);
         draw (restartLifeTime);
     }
+    public void updateText(String newText) {
+        updateText(newText, true);
+    }
+    public void updateText(int newTextRes, boolean restartLifeTime) {
+        updateText(ctx.getResources().getString(newTextRes), restartLifeTime);
+    }
+    public void updateText(int newTextRes) {
+        updateText(ctx.getResources().getString(newTextRes), true);
+    }
 
     public void updateTextSize(int textSize, boolean restartLifeTime) {
         this.textSize = textSize;
         textView.setTextSize((float) textSize);
         draw (restartLifeTime);
+    }
+    public void updateTextSize(int textSize) {
+        updateTextSize(textSize, true);
     }
 
     public void updateFgColor(int fgColor, boolean restartLifeTime) {
@@ -298,10 +316,16 @@ public class BalloonPopup {
         textView.setTextColor(fgColor);
         draw (restartLifeTime);
     }
+    public void updateFgColor(int fgColor) {
+        updateFgColor(fgColor, true);
+    }
 
     public void updateLifeTimeToLive (int milliseconds, boolean restartLifeTime) {
         this.timeToLive = milliseconds;
         draw (restartLifeTime);
+    }
+    public void updateLifeTimeToLive (int milliseconds) {
+        updateLifeTimeToLive(milliseconds, true);
     }
 
     public void restartLifeTime() {
@@ -319,6 +343,13 @@ public class BalloonPopup {
                     }
                 });
         }
+    }
+
+    public void showAgain() {
+        if (popupWindow.isShowing())
+            restartLifeTime();
+        else
+            draw(true);
     }
 
     public static class Builder {
