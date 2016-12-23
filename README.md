@@ -19,18 +19,27 @@ In your Application's or Module's build.gradle file:
 
     dependencies {
         ...
-        compile 'com.github.BeppiMenozzi:Knob:1.2.2'
+        compile 'com.github.BeppiMenozzi:BalloonPopup:0.2.1'
         ...
     }
 
 ### Minimal usage
 
-    bp = BalloonPopup.Builder(getApplicationContext(), myView)
+    BalloonPopup bp = BalloonPopup.Builder(getApplicationContext(), myView)
                         .text("myText")
                         .show();
                         
+To show it again:
+
+    bp.showAgain();
+    
+To display different text:
+
+    bp.updateText(newText, true);
+                        
 ### Customize
 Available methods in the Builder:
+
       bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
                         .text("text")               // set the text displayed (String or resource)
                         .timeToLive(2000)           // Millseconds before closing the popup. 0 = persistent
@@ -52,14 +61,18 @@ Available methods in the Builder:
 
     
 Available methods on the balloon:
+
                 bp.isShowing();                     // returns wether the balloon is currently visibile
                 bp.restartLifeTime();               // restarts the time to live, postponing the closure
-                bp.updateTextSize();                // updates text size
-                bp.updateFgColor();                 // updates text color
-                bp.updateOffset();                  // updates position
-                bp.updateGravity();                 // updates gravity
+                bp.updateText();                    // updates the text and displays it again
+                bp.updateTextSize();                // updates text size and displays it again
+                bp.updateFgColor();                 // updates text color and displays it again
+                bp.updateOffset();                  // updates position and displays it again
+                bp.updateGravity();                 // updates gravity and displays it again
                 bp.updateLifeTimeToLive();          // updates time to live
+                bp.showAgain();                     // show again the previous balloon
 
+Most of these methods ask a boolean parameter *restartLifeTime*. If this is *false*, in case of update, if the balloon is already showing, its life is not made longer and its closure remains scheduled as before. As default this parameter is *true* (so whenever an update is done, the time to live is reset).
 
 ### Known bugs
 On emulators with version < 4.4.4 / KitKat / Api 19 it can crash.
