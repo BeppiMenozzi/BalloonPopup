@@ -30,6 +30,64 @@ In your Application's or Module's build.gradle file:
                         .show();
                         
 ### Customize
+Available methods in the Builder:
+      bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
+                        .text("text")               // set the text displayed (String or resource)
+                        .timeToLive(2000)           // Millseconds before closing the popup. 0 = persistent
+                        .animation(fade_and_pop)    // animation style used. Available:
+                                                    // pop, scale, fade, fade75
+                                                    // and all the possible combinations.
+                                                    // When fade75 is used (up to alpha .75) the view is slightly transparent
+                        .shape(rounded_square)      // Circle (oval) or rounded square
+                        .bgColor(Color.CYAN)        // unused yet
+                        .fgColor(Color.RED)         // text color
+                        .gravity(bg)                // gravity relative to the attach view
+                        .textSize(6)                // text size
+                        .offsetX(10)                // offsets to move the position accordingly
+                        .offsetY(15)
+                        .positionOffset(10, 15)
+                        .drawable(R.drawable.bg_circle) // custom background drawable
+                        .layoutRes(R.layout.customview) // custom layout for the popup window
+                        .show();                    // create, display and return the balloon
+
+    
+Available methods on the balloon:
+                bp.isShowing();                     // returns wether the balloon is currently visibile
+                bp.restartLifeTime();               // restarts the time to live, postponing the closure
+                bp.updateTextSize();                // updates text size
+                bp.updateFgColor();                 // updates text color
+                bp.updateOffset();                  // updates position
+                bp.updateGravity();                 // updates gravity
+                bp.updateLifeTimeToLive();          // updates time to live
+
 
 ### Known bugs
 On emulators with version < 4.4.4 / KitKat / Api 19 it can crash.
+
+Author
+-------
+* Beppi Menozzi
+
+License
+-------
+    The MIT License (MIT)
+
+    Copyright (c) 2016 Beppi Menozzi
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
