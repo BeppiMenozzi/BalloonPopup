@@ -35,7 +35,7 @@ To show it again:
     
 To display different text:
 
-    bp.updateText(newText, true);
+    bp.updateText(newText);
                         
 ### Customize
 Available methods in the Builder:
