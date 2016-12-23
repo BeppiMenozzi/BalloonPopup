@@ -37,6 +37,9 @@ To display different text:
 
     bp.updateText(newText);
                         
+### Examples
+In addition to the simple example included, this library is used in my <a href="https://github.com/BeppiMenozzi/Knob">Knob Selector library</a>, that contains useful examples and an interesting way to use this library. Test it out.
+
 ### Customize
 Available methods in the Builder:
 
