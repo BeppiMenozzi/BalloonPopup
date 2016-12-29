@@ -140,10 +140,10 @@ public class BalloonPopup {
             if (drawable != null) {
                 drawable.setAlpha(getDrawableAlpha());
                 popupWindow.setBackgroundDrawable(drawable);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    drawable.setTint(bgColor);
+                }
             }
-
-
-            //TODO: manage bgcolor
 
             switch (balloonAnimation) {
                 case instantin_fadeout: popupWindow.setAnimationStyle(instantin_fadeout); break;
@@ -199,7 +199,9 @@ public class BalloonPopup {
     }
 
     private void kill() {
-        if (popupWindow != null) popupWindow.dismiss();
+        try {  // window could not be attached anymore
+            if (popupWindow != null) popupWindow.dismiss();
+        } catch (Exception e) {}
         if (bDelay != null) bDelay.clear();
     }
 
@@ -261,8 +263,21 @@ public class BalloonPopup {
             }
             else
                 bDelay = new BDelay((long) timeToLive, new Runnable() { @Override public void run() { kill(); }});
-        } else
-            popupWindow.showAtLocation(attachView, Gravity.NO_GRAVITY, posX, posY);
+        } else {
+
+            attachView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {    // shows the popup when the window is ready or when the layout changes when made in the onCreate() method
+                                                                                        // managing the life cycle so that after a ROTATION of the screen the Builder is not run again is left to the application
+                @Override public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                    if (popupWindow.isShowing()) draw(true);
+                }
+            });
+            final int x=posX;
+            final int y=posY;
+            attachView.post(new Runnable() {   // prevents crash when attachView is not ready yet because the popup is made in the onCreate() method
+                @Override public void run() {
+                      popupWindow.showAtLocation(attachView, Gravity.NO_GRAVITY, x, y);
+                }});
+        }
     }
 
     public boolean isShowing() {
@@ -318,6 +333,18 @@ public class BalloonPopup {
     }
     public void updateFgColor(int fgColor) {
         updateFgColor(fgColor, true);
+    }
+
+    public void updateBgColor(int bgColor, boolean restartLifeTime) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            if (drawable != null) {
+                this.bgColor = bgColor;
+                drawable.setTint(bgColor);
+                draw (restartLifeTime);
+            }
+    }
+    public void updateBgColor(int bgColor) {
+        updateBgColor(bgColor, true);
     }
 
     public void updateLifeTimeToLive (int milliseconds, boolean restartLifeTime) {
@@ -450,6 +477,7 @@ public class BalloonPopup {
 
         public BalloonPopup show() {
             BalloonPopup bp = new BalloonPopup(ctx, attachView, gravity, offsetX, offsetY, bgColor, fgColor, layoutRes, text, textSize, drawable, balloonAnimation, timeToLive);
+
             bp.show();
             return bp;
         }

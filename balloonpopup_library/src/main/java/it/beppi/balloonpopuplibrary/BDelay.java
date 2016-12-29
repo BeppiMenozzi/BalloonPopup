@@ -5,7 +5,6 @@ package it.beppi.balloonpopuplibrary;
  */
 
 import android.os.Handler;
-import android.util.Log;
 
 /**
  * Lancia un Runnable dopo un tempo tot in ms.
@@ -28,7 +27,6 @@ public class BDelay {
 
     public BDelay(long interv, Runnable onTickHandler)
     {
-        Log.d("beppi", "bdelay constructor");
         interval = interv;
         setOnTickHandler(onTickHandler);
         handler = new Handler();

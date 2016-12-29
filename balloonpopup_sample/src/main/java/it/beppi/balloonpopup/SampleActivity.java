@@ -1,5 +1,6 @@
 package it.beppi.balloonpopup;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,14 @@ public class SampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
+        BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button_gravity))
+                .timeToLive(2000)
+                .animation(fade_and_pop)
+                .shape(rounded_square)
+                .fgColor(Color.RED)
+                .gravity(bg)
+                .textSize(6)
+                .text("tensdapoi").show();
 
         ((Button)findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,15 +47,9 @@ public class SampleActivity extends AppCompatActivity {
                         .timeToLive(2000)
                         .animation(fade_and_pop)
                         .shape(rounded_square)
-                        .bgColor(Color.CYAN)
                         .fgColor(Color.RED)
                         .gravity(bg)
                         .textSize(6)
-                        .offsetX(10)
-                        .offsetY(15)
-                        .positionOffset(10, 15)
-                        .drawable(R.drawable.bg_circle)
-                        .layoutRes(R.layout.customview)
                         .show();
                 else
                     bp.restartLifeTime();
@@ -60,9 +63,11 @@ public class SampleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 bg = BalloonGravity.values()[rnd.nextInt(25)];
                 button_g.setText("Gravity: " + bg.toString());
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 if (bp != null && bp.isShowing()) {
                     bp.updateGravity(bg, true);
                     bp.updateTextSize(new Random().nextInt(5) + 10, true);
+
                 }
             }
         });
