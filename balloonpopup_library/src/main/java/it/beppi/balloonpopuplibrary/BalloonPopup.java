@@ -48,7 +48,9 @@ public class BalloonPopup {
 
     public enum BalloonShape {
         oval,
-        rounded_square
+        rounded_square,
+        little_rounded_square,
+        square
     }
 
     public enum BalloonAnimation {
@@ -452,6 +454,8 @@ public class BalloonPopup {
             switch (balloonShape) {
                 case oval: drawable = ctx.getResources().getDrawable(R.drawable.bg_circle); break;
                 case rounded_square: drawable = ctx.getResources().getDrawable(R.drawable.bg_rounded_square); break;
+                case little_rounded_square: drawable = ctx.getResources().getDrawable(R.drawable.bg_little_rounded_square); break;
+                case square: drawable = ctx.getResources().getDrawable(R.drawable.bg_square); break;
             }
             return this;
         }
