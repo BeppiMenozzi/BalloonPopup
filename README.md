@@ -70,12 +70,18 @@ Available methods on the balloon:
                 bp.updateText();                    // updates the text and displays it again
                 bp.updateTextSize();                // updates text size and displays it again
                 bp.updateFgColor();                 // updates text color and displays it again
+                bp.updateBgColor();                 // updates background color: available only from Lollipop (>= 21)
                 bp.updateOffset();                  // updates position and displays it again
                 bp.updateGravity();                 // updates gravity and displays it again
                 bp.updateLifeTimeToLive();          // updates time to live
                 bp.showAgain();                     // show again the previous balloon
 
 Most of these methods ask a boolean parameter *restartLifeTime*. If this is *false*, in case of update, if the balloon is already showing, its life is not made longer and its closure remains scheduled as before. As default this parameter is *true* (so whenever an update is done, the time to live is reset).
+
+### New in 0.2.2
+* bgcolor for >= Lollipop (21)
+* fixed crash if built inside onCreate()
+* increased minApk from 9 to 11
 
 ### Known bugs
 On emulators with version < 4.4.4 / KitKat / Api 19 it can crash.
