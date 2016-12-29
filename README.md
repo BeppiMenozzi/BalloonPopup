@@ -19,7 +19,7 @@ In your Application's or Module's build.gradle file:
 
     dependencies {
         ...
-        compile 'com.github.BeppiMenozzi:BalloonPopup:0.2.1'
+        compile 'com.github.BeppiMenozzi:BalloonPopup:0.2.2'
         ...
     }
 
