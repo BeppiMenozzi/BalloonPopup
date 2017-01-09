@@ -84,7 +84,8 @@ Most of these methods ask a boolean parameter *restartLifeTime*. If this is *fal
 * increased minApk from 9 to 11
 
 ### Known bugs
-On emulators with version < 4.4.4 / KitKat / Api 19 it can crash.
+* On emulators with version < 4.4.4 / KitKat / Api 19 it can crash.
+* It doesn't scroll when the attached view is in a scrollview.
 
 Author
 -------
