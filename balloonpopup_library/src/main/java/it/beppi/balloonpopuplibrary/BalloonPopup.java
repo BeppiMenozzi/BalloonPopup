@@ -35,6 +35,7 @@ public class BalloonPopup {
     private int offsetX, offsetY;
     private int bgColor, fgColor;
     private int layoutRes;
+    private View customView;
     private String text;
     private int textSize;
     private Drawable drawable;
@@ -103,7 +104,7 @@ public class BalloonPopup {
         allbottom_allright,
     }
 
-    public BalloonPopup(Context ctx, View attachView, BalloonGravity gravity, int offsetX, int offsetY, int bgColor, int fgColor, int layoutRes, String text, int textSize, Drawable drawable, BalloonAnimation balloonAnimation, int timeToLive) {
+    public BalloonPopup(Context ctx, View attachView, BalloonGravity gravity, int offsetX, int offsetY, int bgColor, int fgColor, int layoutRes, View customView, String text, int textSize, Drawable drawable, BalloonAnimation balloonAnimation, int timeToLive) {
         this.ctx = ctx;
         this.attachView = attachView;
         this.gravity = gravity;
@@ -112,6 +113,7 @@ public class BalloonPopup {
         this.bgColor = bgColor;
         this.fgColor = fgColor;
         this.layoutRes = layoutRes;
+        this.customView = customView;
         this.text = text;
         this.textSize = textSize;
         this.drawable = drawable;
@@ -124,12 +126,18 @@ public class BalloonPopup {
     }
 
     private void show() {
-        hostedView = ((LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, null);
+        if (customView != null) {
+            hostedView = customView;
+        } else {
+            hostedView = ((LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, null);
+        }
 
-        textView = (TextView) hostedView.findViewById(R.id.text_view);
-        textView.setText(text);
-        textView.setTextColor(fgColor);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
+        if (text != null) {
+            textView = (TextView) hostedView.findViewById(R.id.text_view);
+            textView.setText(text);
+            textView.setTextColor(fgColor);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)textSize);
+        }
 
         if (popupWindow == null) { // || !popupWindow.isShowing())
             popupWindow = new PopupWindow(hostedView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -203,7 +211,7 @@ public class BalloonPopup {
     private void kill() {
         try {  // window could not be attached anymore
             if (popupWindow != null) popupWindow.dismiss();
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
         if (bDelay != null) bDelay.clear();
     }
 
@@ -388,7 +396,8 @@ public class BalloonPopup {
         private int offsetX = 0, offsetY = 0;
         private int bgColor = Color.WHITE, fgColor = Color.BLACK;
         private int layoutRes = R.layout.text_balloon;
-        private String text = "";
+        private View customView;
+        private String text;
         private int textSize = 12;
         private Drawable drawable;
         private BalloonAnimation balloonAnimation = BalloonAnimation.pop;
@@ -413,7 +422,7 @@ public class BalloonPopup {
             this.offsetY = offsetY;
             return this;
         }
-        
+
         public Builder positionOffset(int offsetX, int offsetY) {
             this.offsetX = offsetX;
             this.offsetY = offsetY;
@@ -432,6 +441,11 @@ public class BalloonPopup {
 
         public Builder layoutRes(int layoutRes) {
             this.layoutRes = layoutRes;
+            return this;
+        }
+
+        public Builder customView(View customView) {
+            this.customView = customView;
             return this;
         }
 
@@ -480,7 +494,7 @@ public class BalloonPopup {
         }
 
         public BalloonPopup show() {
-            BalloonPopup bp = new BalloonPopup(ctx, attachView, gravity, offsetX, offsetY, bgColor, fgColor, layoutRes, text, textSize, drawable, balloonAnimation, timeToLive);
+            BalloonPopup bp = new BalloonPopup(ctx, attachView, gravity, offsetX, offsetY, bgColor, fgColor, layoutRes, customView, text, textSize, drawable, balloonAnimation, timeToLive);
 
             bp.show();
             return bp;
