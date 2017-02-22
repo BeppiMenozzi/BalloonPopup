@@ -32,6 +32,7 @@ public class BalloonPopup {
     private Context ctx;
     private View attachView;
     private BalloonGravity gravity;
+    private boolean dismissOnTap;
     private int offsetX, offsetY;
     private int bgColor, fgColor;
     private int layoutRes;
@@ -104,10 +105,11 @@ public class BalloonPopup {
         allbottom_allright,
     }
 
-    public BalloonPopup(Context ctx, View attachView, BalloonGravity gravity, int offsetX, int offsetY, int bgColor, int fgColor, int layoutRes, View customView, String text, int textSize, Drawable drawable, BalloonAnimation balloonAnimation, int timeToLive) {
+    public BalloonPopup(Context ctx, View attachView, BalloonGravity gravity, boolean dismissOnTap, int offsetX, int offsetY, int bgColor, int fgColor, int layoutRes, View customView, String text, int textSize, Drawable drawable, BalloonAnimation balloonAnimation, int timeToLive) {
         this.ctx = ctx;
         this.attachView = attachView;
         this.gravity = gravity;
+        this.dismissOnTap = dismissOnTap;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.bgColor = bgColor;
@@ -184,13 +186,15 @@ public class BalloonPopup {
             }
         }
 
-        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                kill();
-                return false;
-            }
-        });
+        if (dismissOnTap) {
+            popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    kill();
+                    return false;
+                }
+            });
+        }
 
 
         draw(true);
@@ -393,6 +397,7 @@ public class BalloonPopup {
         private Context ctx;
         private View attachView;
         private BalloonGravity gravity = halftop_halfright;
+        private boolean dismissOnTap = true;
         private int offsetX = 0, offsetY = 0;
         private int bgColor = Color.WHITE, fgColor = Color.BLACK;
         private int layoutRes = R.layout.text_balloon;
@@ -403,7 +408,7 @@ public class BalloonPopup {
         private BalloonAnimation balloonAnimation = BalloonAnimation.pop;
         private int timeToLive = 1500;
 
-        public Builder(Context ctx, View attachView) {
+        Builder(Context ctx, View attachView) {
             this.ctx = ctx;
             this.attachView = attachView;
             this.drawable = ctx.getResources().getDrawable(R.drawable.bg_circle);
@@ -411,6 +416,11 @@ public class BalloonPopup {
 
         public Builder gravity(BalloonGravity gravity) {
             this.gravity = gravity;
+            return this;
+        }
+
+        public Builder dismissOnTap(boolean dismissOnTap) {
+            this.dismissOnTap = dismissOnTap;
             return this;
         }
 
@@ -494,7 +504,7 @@ public class BalloonPopup {
         }
 
         public BalloonPopup show() {
-            BalloonPopup bp = new BalloonPopup(ctx, attachView, gravity, offsetX, offsetY, bgColor, fgColor, layoutRes, customView, text, textSize, drawable, balloonAnimation, timeToLive);
+            BalloonPopup bp = new BalloonPopup(ctx, attachView, gravity, dismissOnTap, offsetX, offsetY, bgColor, fgColor, layoutRes, customView, text, textSize, drawable, balloonAnimation, timeToLive);
 
             bp.show();
             return bp;
