@@ -1,9 +1,11 @@
 package it.beppi.balloonpopuplibrary;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ public class BalloonPopup {
     private View attachView;
     private BalloonGravity gravity;
     private boolean dismissOnTap;
+    private boolean stayWithinScreenBounds;
     private int offsetX, offsetY;
     private int bgColor, fgColor;
     private int layoutRes;
@@ -105,11 +108,12 @@ public class BalloonPopup {
         allbottom_allright,
     }
 
-    public BalloonPopup(Context ctx, View attachView, BalloonGravity gravity, boolean dismissOnTap, int offsetX, int offsetY, int bgColor, int fgColor, int layoutRes, View customView, String text, int textSize, Drawable drawable, BalloonAnimation balloonAnimation, int timeToLive) {
+    public BalloonPopup(Context ctx, View attachView, BalloonGravity gravity, boolean dismissOnTap, boolean stayWithinScreenBounds, int offsetX, int offsetY, int bgColor, int fgColor, int layoutRes, View customView, String text, int textSize, Drawable drawable, BalloonAnimation balloonAnimation, int timeToLive) {
         this.ctx = ctx;
         this.attachView = attachView;
         this.gravity = gravity;
         this.dismissOnTap = dismissOnTap;
+        this.stayWithinScreenBounds = stayWithinScreenBounds;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.bgColor = bgColor;
@@ -267,6 +271,15 @@ public class BalloonPopup {
                 posY += heightAttachView; break;
         }
 
+        if (stayWithinScreenBounds) {
+            posX = Math.max(posX, 0);
+            posY = Math.max(posY, 0);
+
+            DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+            posX = Math.min(metrics.widthPixels - widthHostedView, posX);
+            posY = Math.min(metrics.heightPixels - heightHostedView, posY);
+        }
+
         if (restartLifeTime && popupWindow.isShowing()) {
             popupWindow.update(posX, posY, popupWindow.getWidth(), popupWindow.getHeight());
             if (bDelay != null) {
@@ -398,6 +411,7 @@ public class BalloonPopup {
         private View attachView;
         private BalloonGravity gravity = halftop_halfright;
         private boolean dismissOnTap = true;
+        private boolean stayWithinScreenBounds = true;
         private int offsetX = 0, offsetY = 0;
         private int bgColor = Color.WHITE, fgColor = Color.BLACK;
         private int layoutRes = R.layout.text_balloon;
@@ -421,6 +435,11 @@ public class BalloonPopup {
 
         public Builder dismissOnTap(boolean dismissOnTap) {
             this.dismissOnTap = dismissOnTap;
+            return this;
+        }
+
+        public Builder stayWithinScreenBounds(boolean stayWithinScreenBounds) {
+            this.stayWithinScreenBounds = stayWithinScreenBounds;
             return this;
         }
 
@@ -504,7 +523,7 @@ public class BalloonPopup {
         }
 
         public BalloonPopup show() {
-            BalloonPopup bp = new BalloonPopup(ctx, attachView, gravity, dismissOnTap, offsetX, offsetY, bgColor, fgColor, layoutRes, customView, text, textSize, drawable, balloonAnimation, timeToLive);
+            BalloonPopup bp = new BalloonPopup(ctx, attachView, gravity, dismissOnTap, stayWithinScreenBounds, offsetX, offsetY, bgColor, fgColor, layoutRes, customView, text, textSize, drawable, balloonAnimation, timeToLive);
 
             bp.show();
             return bp;
