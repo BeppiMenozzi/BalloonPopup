@@ -216,6 +216,10 @@ public class BalloonPopup {
         else return 255;
     }
 
+    public void dismiss() {
+        kill();
+    }
+
     private void kill() {
         try {  // window could not be attached anymore
             if (popupWindow != null) popupWindow.dismiss();
