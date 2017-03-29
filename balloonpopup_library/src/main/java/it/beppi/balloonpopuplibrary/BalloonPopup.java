@@ -9,8 +9,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -123,6 +125,14 @@ public class BalloonPopup {
         return new Builder(ctx, anchorView);
     }
 
+    ScrollView findScrollViewParent(View v) {
+        if (v == null) return null;
+        else if (v instanceof ScrollView)
+            return (ScrollView)v;
+        else
+            return findScrollViewParent((ViewGroup)v.getParent());
+    }
+
     private void show() {
         hostedView = ((LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, null);
 
@@ -183,7 +193,6 @@ public class BalloonPopup {
                 return false;
             }
         });
-
 
         draw(true);
     }

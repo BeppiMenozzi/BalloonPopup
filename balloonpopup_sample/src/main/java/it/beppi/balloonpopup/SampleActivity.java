@@ -43,7 +43,6 @@ public class SampleActivity extends AppCompatActivity {
                         .show();
                 else
                     bp.restartLifeTime();
-
             }
         });
 
