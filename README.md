@@ -2,7 +2,7 @@
 
 Displays a round or squared popup attaching it to a View. Allows animations and automatic display and hide, or persistence of the balloon when updating its value. Uses the Builder pattern for maximum ease.
 
-<br><img src="ezgif.com-0fc591cc9d.gif" ></br>
+<br><img src="ezgif-2-a21523aa0c.gif" ></br>
 
 ### Setup
 In your project's build.gradle file:
