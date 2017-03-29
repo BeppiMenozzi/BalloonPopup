@@ -78,6 +78,13 @@ Available methods on the balloon:
 
 Most of these methods ask a boolean parameter *restartLifeTime*. If this is *false*, in case of update, if the balloon is already showing, its life is not made longer and its closure remains scheduled as before. As default this parameter is *true* (so whenever an update is done, the time to live is reset).
 
+### New in 0.2.8
+* Included alexandre-g additions:
+** Allow custom views for dynamically built layouts
+** Allow disabling tap-to-dismiss
+** Allow to force showing only within screen bounds
+** Allow dismissing popup
+
 ### New in 0.2.2
 * bgcolor for >= Lollipop (21)
 * fixed crash if built inside onCreate()
