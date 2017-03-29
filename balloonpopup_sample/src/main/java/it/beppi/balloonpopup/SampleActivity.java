@@ -33,14 +33,14 @@ public class SampleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (bp == null || !bp.isShowing())
                     bp = BalloonPopup.Builder(getApplicationContext(), findViewById(R.id.button))
-                        .text("text")
-                        .timeToLive(2000)
-                        .animation(fade_and_pop)
-                        .shape(rounded_square)
-                        .fgColor(Color.RED)
-                        .gravity(bg)
-                        .textSize(6)
-                        .show();
+                            .text("text")
+                            .timeToLive(2000)
+                            .animation(fade_and_pop)
+                            .shape(rounded_square)
+                            .fgColor(Color.RED)
+                            .gravity(bg)
+                            .textSize(6)
+                            .show();
                 else
                     bp.restartLifeTime();
             }
